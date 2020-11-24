@@ -11,17 +11,16 @@ TODO: Write short description here and embulk-output-slack_message.gemspec file.
 
 ## Configuration
 
-- **option1**: description (integer, required)
-- **option2**: description (string, default: `"myvalue"`)
-- **option3**: description (string, default: `null`)
+- **webhook_url**: description (string, required)
+- **title**: description (string)
 
 ## Example
 
 ```yaml
 out:
   type: slack_message
-  option1: example1
-  option2: example2
+  title: "New Message"
+  webhook_url: "https://hooks.slack.com/services/TZZZZZZ/BYYYYYY/XXXXXXXXXXXXXXXXX"
 ```
 
 

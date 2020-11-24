@@ -10,6 +10,7 @@ module Embulk
         # configuration code:
         task = {
           "webhook_url" => config.param("webhook_url", :string),
+          "title" => config.param("title", :string, default: nil),
 #          "option1" => config.param("option1", :integer),                     # integer, required
 #          "option2" => config.param("option2", :string, default: "myvalue"),  # string, optional
 #          "option3" => config.param("option3", :string, default: nil),        # string, optional
@@ -32,8 +33,9 @@ module Embulk
       # end
 
       def init
-        @webhook_url = task["webhook_url"]
-        @slack_poster = Slack::Poster.new(@webhook_url)
+        title = task["title"]
+        webhook_url = task["webhook_url"]
+        @slack_poster = Slack::Poster.new(webhook_url, title)
       end
 
       def close
@@ -42,7 +44,7 @@ module Embulk
       def add(page)
         page.each do |record|
           hash = Hash[schema.names.zip(record)]
-          @slack_poster.post("New App Arrival!", hash)
+          @slack_poster.post(hash)
         end
       end
 

@@ -5,7 +5,8 @@ module Embulk
         class Error < StandardError;end
         class SlackPostError < Error;end
         
-        def initialize(webhook_url)
+        def initialize(webhook_url, title)
+          @title = title
           @conn = Faraday.new(url: webhook_url, headers: {'Content-Type' => 'application/json'}) do |builder|
             builder.request  :url_encoded
             builder.response :logger
@@ -13,20 +14,10 @@ module Embulk
           end        
         end
 
-        def post(title, hash)
+        def post(hash)
           res = @conn.post do |req|
             req.body = {
-              text: title,
-              blocks: [
-		        {
-			      type: "section",
-			      text: { type: "plain_text", text: title, }
-		        },                
-                {
-                  type: "section",
-                  fields: hash.map { |k, v| {type: "mrkdwn", text: "*#{k}* \n #{v}"} }
-                },
-              ]
+              blocks: build_blocks(hash),
             }.to_json
           end
 
@@ -34,6 +25,23 @@ module Embulk
           p res.body if res.body
 
           raise SlackPostError.new(res.body) if p res.status != 200
+        end
+
+        private
+
+        def build_blocks(hash)
+          blocks = []
+          if @title
+            blocks << {
+			  type: "section",
+			  text: { type: "plain_text", text: @title }
+		    }
+          end
+
+          blocks << {
+            type: "section",
+            fields: hash.map { |k, v| {type: "mrkdwn", text: "*#{k}* \n #{v}"} }
+          }
         end
       end
     end
