@@ -1,0 +1,19 @@
+in:
+  type: file
+  path_prefix: example/csv/sample.csv
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: ','
+    quote: '"'
+    escape: '"'
+    null_string: 'NULL'
+    skip_header_lines: 1
+    columns:
+    - {name: id, type: long}
+    - {name: name, type: string}
+
+out:
+  type: slack_message
+  webhook_url: {{ env.SLACK_WEBHOOK_URL }}
