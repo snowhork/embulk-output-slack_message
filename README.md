@@ -29,3 +29,8 @@ out:
 ```
 $ rake
 ```
+## development
+
+```
+docker-compose run -e SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..." embulk run -I lib/ example/test.yml.liquid
+```

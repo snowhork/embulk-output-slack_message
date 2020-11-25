@@ -11,6 +11,7 @@ module Embulk
         task = {
           "webhook_url" => config.param("webhook_url", :string),
           "title" => config.param("title", :string, default: nil),
+          "template_file" => config.param("template_file", :string, default: nil),
 #          "option1" => config.param("option1", :integer),                     # integer, required
 #          "option2" => config.param("option2", :string, default: "myvalue"),  # string, optional
 #          "option3" => config.param("option3", :string, default: nil),        # string, optional
@@ -33,18 +34,19 @@ module Embulk
       # end
 
       def init
-        title = task["title"]
-        webhook_url = task["webhook_url"]
-        @slack_poster = Slack::Poster.new(webhook_url, title)
+        @title = task["title"]
+        @poster = Slack::Poster.new(task["webhook_url"], task["template_file"])
       end
 
       def close
       end
 
       def add(page)
+        @poster.post_title(@title)
+
         page.each do |record|
           hash = Hash[schema.names.zip(record)]
-          @slack_poster.post(hash)
+          @poster.post_record(hash)
         end
       end
 
@@ -59,6 +61,5 @@ module Embulk
         return task_report
       end
     end
-
   end
 end

@@ -1,9 +1,9 @@
 Gem::Specification.new do |spec|
   spec.name          = "embulk-output-slack_message"
-  spec.version       = "0.1.0"
+  spec.version       = "0.1.1"
   spec.authors       = ["snowhork"]
   spec.summary       = "Slack Message output plugin for Embulk"
-  spec.description   = "Dumps records to Slack Message."
+  spec.description   = "Send records to Slack Message."
   spec.email         = ["YOUR_NAME"]
   spec.licenses      = ["MIT"]
   # TODO set this: spec.homepage      = "https://github.com/YOUR_NAME/embulk-output-slack_message"
